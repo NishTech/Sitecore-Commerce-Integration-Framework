@@ -7,6 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.NishTech.Integration
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.NishTech.Sample.IntegrationProcessor", "src\Plugin.NishTech.Sample.IntegrationProcessor\Plugin.NishTech.Sample.IntegrationProcessor.csproj", "{F67E892E-2A46-4673-BE95-15A780E8AD38}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4E28A99E-061E-43EB-B3D5-1292DF4898CE}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

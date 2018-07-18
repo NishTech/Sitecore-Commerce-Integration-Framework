@@ -3,7 +3,7 @@ In most online ecommerce implementations, integration with backend systems like 
 
 ## How It Works
 There are two plugins in this solution
-- Plugin.NishTech.JobScheduler
+- Plugin.NishTech.IntegrationFramework
 This is the core framework project.
 - Plugin.NishTech.Sample.IntegrationProcessor
 This is a sample project that shows, how to create an integration processor.
