@@ -1,0 +1,617 @@
+{
+	"variables": [],
+	"info": {
+		"name": "JobScheduler",
+		"_postman_id": "8e47ebaf-a83b-4d2b-2fb5-3c5dc927135b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API",
+			"description": "",
+			"item": [
+				{
+					"name": "Get Job Connection",
+					"request": {
+						"url": {
+							"raw": "{{ServiceHost}}/{{ShopsApi}}/JobConnections('SqlJobConnection')?$expand=Components",
+							"host": [
+								"{{ServiceHost}}"
+							],
+							"path": [
+								"{{ShopsApi}}",
+								"JobConnections('SqlJobConnection')"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "Components",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job",
+					"request": {
+						"url": {
+							"raw": "{{ServiceHost}}/{{ShopsApi}}/Jobs('SqlJobConnection-CustomerRefreshJob')?$expand=Components",
+							"host": [
+								"{{ServiceHost}}"
+							],
+							"path": [
+								"{{ShopsApi}}",
+								"Jobs('SqlJobConnection-CustomerRefreshJob')"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "Components",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job Instance",
+					"request": {
+						"url": {
+							"raw": "{{ServiceHost}}/{{ShopsApi}}/JobInstances('CustomerRefreshJob-CustomerRefreshJobInstance1')?$expand=Components",
+							"host": [
+								"{{ServiceHost}}"
+							],
+							"path": [
+								"{{ShopsApi}}",
+								"JobInstances('CustomerRefreshJob-CustomerRefreshJobInstance1')"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "Components",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job Connections",
+					"request": {
+						"url": "{{ServiceHost}}/{{ShopsApi}}/JobConnections",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jobs",
+					"request": {
+						"url": "{{ServiceHost}}/{{ShopsApi}}/Jobs",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get JobInstances",
+					"request": {
+						"url": "{{ServiceHost}}/{{ShopsApi}}/JobInstances",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Do Actions",
+			"description": "",
+			"item": [
+				{
+					"name": "Add Job Connection",
+					"request": {
+						"url": "{{ServiceHost}}/{{ShopsApi}}/DoUxAction()",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"@odata.context\": \"http://localhost:5000/api/$metadata#Sitecore.Commerce.EntityViews.EntityView\",\n  \"@odata.type\": \"#Sitecore.Commerce.EntityViews.EntityView\",\n  \"Name\": \"Details\",\n  \"Policies\": [],\n  \"EntityId\": \"\",\n  \"Action\": \"AddJobConnection\",\n  \"ItemId\": \"\",\n  \"Properties\": [\n    {\n      \"Name\": \"Name\",\n      \"Policies\": [],\n      \"DisplayName\": \"Name\",\n      \"Value\": \"SqlJobConnection\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"Type\",\n      \"Policies\": [],\n      \"DisplayName\": \"Type\",\n      \"Value\": \"SQL Server\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"DisplayName\",\n      \"Policies\": [],\n      \"DisplayName\": \"DisplayName\",\n      \"Value\": \"this is my sqljobconnection's display name\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"Description\",\n      \"Policies\": [],\n      \"DisplayName\": \"Description\",\n      \"Value\": \"this is my sqljobconnection's description\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"DbConnectionString\",\n      \"Policies\": [],\n      \"DisplayName\": \"DbConnectionString\",\n      \"Value\": \"Data Source=.\\\\SQL2016;Initial Catalog=MyFakeERP;Integrated Security=False;User ID=user;Password=*****\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"FileImportFolder\",\n      \"Policies\": [],\n      \"DisplayName\": \"File Import Folder\",\n      \"Value\": \"\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"FileArchiveFolder\",\n      \"Policies\": [],\n      \"DisplayName\": \"File Archive Folder\",\n      \"Value\": \"\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"WebServiceUrl\",\n      \"Policies\": [],\n      \"DisplayName\": \"WebServiceUrl\",\n      \"Value\": \"\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"Username\",\n      \"Policies\": [],\n      \"DisplayName\": \"Username\",\n      \"Value\": \"\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    },\n    {\n      \"Name\": \"Password\",\n      \"Policies\": [],\n      \"DisplayName\": \"Password\",\n      \"Value\": \"\",\n      \"IsHidden\": false,\n      \"OriginalType\": null,\n      \"IsReadOnly\": false\n    }\n  ],\n  \"ChildViews\": []\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add Job",
+					"request": {
+						"url": "{{ServiceHost}}/{{ShopsApi}}/DoUxAction()",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"@odata.context\": \"http://localhost:5000/api/$metadata#Sitecore.Commerce.EntityViews.EntityView\",\n  \"@odata.type\": \"#Sitecore.Commerce.EntityViews.EntityView\",\n  \"Name\": \"Details\",\n  \"Policies\": [],\n  \"EntityId\": \"Entity-JobConnection-SqlJobConnection\",\n  \"Action\": \"AddJob\",\n  \"ItemId\": \"\",\n  \"Properties\": [\n  \t {\n      \"Name\": \"Version\",\n      \"Policies\": [],\n      \"DisplayName\": \"Version\",\n      \"Value\": \"1\",\n      \"IsHidden\": true,\n      \"OriginalType\": \"System.Int32\",\n      \"IsReadOnly\": true,\n      \"UiType\": \"\"\n    },\n    {\n      \"Name\": \"Name\",\n      \"Policies\": [],\n      \"DisplayName\": \"Name\",\n      \"Value\": \"CustomerRefreshJob\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"Type\",\n      \"Policies\": [],\n      \"DisplayName\": \"Type\",\n      \"Value\": \"Refresh\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"Description\",\n      \"Policies\": [],\n      \"DisplayName\": \"Description\",\n      \"Value\": \"Customer refresh job is used to refresh customer data from ERP.\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"DisplayName\",\n      \"Policies\": [],\n      \"DisplayName\": \"DisplayName\",\n      \"Value\": \"Customer Refresh Job\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"SqlQuery\",\n      \"Policies\": [],\n      \"DisplayName\": \"SqlQuery\",\n      \"Value\": \"select top 10 c.AccountNumber as CustomerAccountNumber, c.AccountStatus as CustomerAccountStatus, c.FirstName as CustomerFirstName, c.LastName as CustomerLastName, c.Email as CustomerEmail, c.PhoneNumber as CustomerPhoneNumber, a.AddressName as AddressName, a.FirstName as AddressFirstName, a.LastName as AddressLastName, a.Address1 as Address1, a.Address2 as Address2, a.City as City, a.State as State, a.StateCode as StateCode, a.Country as Country, a.CountryCode as CountryCode, a.ZipCode as ZipCode, a.Email as Email, a.PhoneNumber as PhoneNumber, a.IsPrimary as IsPrimary, a.Company as Company from Customer c inner join Address a on c.Id = a.CustomerId Order by AccountNumber\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"NotificationEmail\",\n      \"Policies\": [],\n      \"DisplayName\": \"NotificationEmail\",\n      \"Value\": \"hchakrabarti@nishtechinc.com\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"IsRecurringJob\",\n      \"Policies\": [],\n      \"DisplayName\": \"IsRecurringJob\",\n      \"Value\": \"false\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"StartDateTime\",\n      \"Policies\": [],\n      \"DisplayName\": \"StartDateTime\",\n      \"Value\": \"03/28/2018\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"EndDateTime\",\n      \"Policies\": [],\n      \"DisplayName\": \"StartDateTime\",\n      \"Value\": \"03/29/2018\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"RecurrenceRepeatType\",\n      \"Policies\": [],\n      \"DisplayName\": \"RecurrenceRepeatType\",\n      \"Value\": \"Hours\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"RepeatValue\",\n      \"Policies\": [],\n      \"DisplayName\": \"RepeatValue\",\n      \"OriginalType\": \"System.Int32\",\n      \"Value\": \"60\",\n      \"IsHidden\": false\n    }\n  ],\n  \"ChildViews\": []\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add Job Instance",
+					"request": {
+						"url": "{{ServiceHost}}/{{ShopsApi}}/DoUxAction()",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "ShopName",
+								"value": "{{ShopName}}",
+								"description": ""
+							},
+							{
+								"key": "ShopperId",
+								"value": "{{ShopperId}}",
+								"description": ""
+							},
+							{
+								"key": "Language",
+								"value": "{{Language}}",
+								"description": ""
+							},
+							{
+								"key": "Currency",
+								"value": "{{Currency}}",
+								"description": ""
+							},
+							{
+								"key": "Environment",
+								"value": "{{Environment}}",
+								"description": ""
+							},
+							{
+								"key": "GeoLocation",
+								"value": "{{GeoLocation}}",
+								"description": ""
+							},
+							{
+								"key": "CustomerId",
+								"value": "{{CustomerId}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{SitecoreIdToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"@odata.context\": \"http://localhost:5000/api/$metadata#Sitecore.Commerce.EntityViews.EntityView\",\n  \"@odata.type\": \"#Sitecore.Commerce.EntityViews.EntityView\",\n  \"Name\": \"Details\",\n  \"Policies\": [],\n  \"EntityId\": \"Entity-Job-SqlJobConnection-CustomerRefreshJob\",\n  \"Action\": \"AddJobInstance\",\n  \"ItemId\": \"\",\n  \"Properties\": [\n  \t {\n      \"Name\": \"Version\",\n      \"Policies\": [],\n      \"DisplayName\": \"Version\",\n      \"Value\": \"1\",\n      \"IsHidden\": true,\n      \"OriginalType\": \"System.Int32\",\n      \"IsReadOnly\": true,\n      \"UiType\": \"\"\n    },\n    {\n      \"Name\": \"Name\",\n      \"Policies\": [],\n      \"DisplayName\": \"Name\",\n      \"Value\": \"CustomerRefreshJobInstance\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"Description\",\n      \"Policies\": [],\n      \"DisplayName\": \"Description\",\n      \"Value\": \"This is instance of the customer refresh job will refresh customer data from ERP.\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"DisplayName\",\n      \"Policies\": [],\n      \"DisplayName\": \"DisplayName\",\n      \"Value\": \"Customer Refresh Job INstance\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"ScheduleDateTime\",\n      \"Policies\": [],\n      \"DisplayName\": \"ScheduleDateTime\",\n      \"Value\": \"03/29/2018 01:00:00\",\n      \"IsHidden\": false\n    },\n    {\n      \"Name\": \"Status\",\n      \"Policies\": [],\n      \"DisplayName\": \"Status\",\n      \"Value\": \"Queued\",\n      \"IsHidden\": false\n    }\n  ],\n  \"ChildViews\": []\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

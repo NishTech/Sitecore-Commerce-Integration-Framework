@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.NishTech.IntegrationFramework", "src\Plugin.NishTech.IntegrationFramework\Plugin.NishTech.IntegrationFramework.csproj", "{917B498F-7028-458B-AECF-261959A45C4A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.NishTech.Sample.IntegrationProcessor", "src\Plugin.NishTech.Sample.IntegrationProcessor\Plugin.NishTech.Sample.IntegrationProcessor.csproj", "{F67E892E-2A46-4673-BE95-15A780E8AD38}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{917B498F-7028-458B-AECF-261959A45C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917B498F-7028-458B-AECF-261959A45C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917B498F-7028-458B-AECF-261959A45C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917B498F-7028-458B-AECF-261959A45C4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F67E892E-2A46-4673-BE95-15A780E8AD38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67E892E-2A46-4673-BE95-15A780E8AD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F67E892E-2A46-4673-BE95-15A780E8AD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F67E892E-2A46-4673-BE95-15A780E8AD38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9F02E5E1-E405-4865-86B7-AAFACF92B3F6}
+	EndGlobalSection
+EndGlobal

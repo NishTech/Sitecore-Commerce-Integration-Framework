@@ -1,0 +1,304 @@
+﻿namespace Plugin.NishTech.Sample.IntegrationProcessor
+{
+    using System;
+    using System.Linq;
+    using System.Data;
+    using System.Data.SqlClient;
+    using Sitecore.Framework.Conditions;
+    using Sitecore.Commerce.EntityViews;
+    using System.Collections.Generic;
+    using Sitecore.Commerce.Core;
+    using Sitecore.Framework.Pipelines;
+    using System.Threading.Tasks;
+    using Plugin.NishTech.IntegrationFramework;
+    using Sitecore.Commerce.Plugin.Customers;
+
+    /// <summary>
+    /// Defines a block
+    /// </summary>
+    /// <seealso>
+    ///     <cref>
+    ///         Sitecore.Framework.Pipelines.PipelineBlock{Plugin.NishTech.IntegrationFramework.ProductProcessorBlock,
+    ///         Plugin.NishTech.IntegrationFramework.SampleEntity, Sitecore.Commerce.Core.CommercePipelineExecutionContext}
+    ///     </cref>
+    /// </seealso>
+    [PipelineDisplayName("IntegrationProcessor.block.sql.customer")]
+    public class CustomerSqlProcessorBlock : PipelineBlock<JobInfoArgument, JobInfoArgument, CommercePipelineExecutionContext>
+    {
+        private readonly IGetEntityViewPipeline _getEntityViewPipeline;
+        private readonly IDoActionPipeline _doActionPipeline;
+        private readonly IFindEntityPipeline _findEntityPipeline;
+
+        public CustomerSqlProcessorBlock(IGetEntityViewPipeline getEntityViewPipeline, IDoActionPipeline doActionPipeline, IFindEntityPipeline findEntityPipeline)
+            : base((string)null)
+        {
+            _getEntityViewPipeline = getEntityViewPipeline;
+            _doActionPipeline = doActionPipeline;
+            _findEntityPipeline = findEntityPipeline;
+        }
+
+        /// <summary>
+        /// The execute.
+        /// </summary>
+        /// <param name="arg">
+        /// The SampleArgument argument.
+        /// </param>
+        /// <param name="context">
+        /// The context.
+        /// </param>
+        /// <returns>
+        /// The <see cref="JobInfoArgument"/>.
+        /// </returns>
+        public override async Task<JobInfoArgument> Run(JobInfoArgument arg, CommercePipelineExecutionContext context)
+        {
+            if (arg == null || arg.JobConnection ==null || !arg.JobConnection.Type.Equals("sql server", StringComparison.OrdinalIgnoreCase))
+                return arg;
+            Condition.Requires(arg).IsNotNull("JobInfoArgument: The argument cannot be null.");
+            Condition.Requires(arg.JobConnection).IsNotNull("JobInfoArgument: JobConnection cannot be null.");
+            Condition.Requires(arg.Job).IsNotNull("JobInfoArgument: Job cannot be null.");
+            Condition.Requires(arg.JobInstance).IsNotNull("JobInfoArgument: JobInstance cannot be null.");
+            try
+            {
+                var customersFromERP = GetCustomersFromERP(arg);
+
+                if (customersFromERP.Any())
+                {
+                    foreach (var erpCustomer in customersFromERP)
+                    {
+                        var customer = await this._findEntityPipeline.Run(new FindEntityArgument(typeof(Customer),
+                            $"{(object)CommerceEntity.IdPrefix<Customer>()}{erpCustomer.AccountNumber}"), context) as Customer;
+
+                        if (customer == null)
+                        {
+                            await AddCustomer(erpCustomer, context);
+                        }
+                        else
+                        {
+                            await EditCustomer(erpCustomer, customer.Id, context);
+                        }
+
+                        if (context.CommerceContext.HasErrors())
+                        {
+                            arg.JobInstance.Status = "Failure";
+                            return arg;
+                        }
+                    }
+                    arg.JobInstance.Status = "Success";
+                }
+                //var messages = context.CommerceContext.GetMessages();
+            }
+            catch (Exception ex)
+            {
+                string str = await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Error, "Error", new object[1]
+                {
+                    arg.JobInstance.Id,
+                }, $"Error occurred for {arg.JobInstance.Id}, Error Message: {ex.Message}");
+                arg.JobInstance.Status = "Failure";
+            }
+            return arg ;
+        }
+
+
+        private async Task AddCustomer(ErpCustomer erpCustomer, CommercePipelineExecutionContext context)
+        {
+            var entityViewArg = new EntityViewArgument();
+            entityViewArg.ViewName = "Details";
+            entityViewArg.ForAction = "AddCustomer";
+            var view = await _getEntityViewPipeline.Run(entityViewArg, context);
+            view.EntityId = $"{(object)CommerceEntity.IdPrefix<Customer>()}{erpCustomer.AccountNumber}";
+            view.Properties.FirstOrDefault(v => v.Name.Equals("FirstName", StringComparison.OrdinalIgnoreCase)).Value =
+                erpCustomer.FirstName;
+            view.Properties.FirstOrDefault(v => v.Name.Equals("LastName", StringComparison.OrdinalIgnoreCase)).Value =
+                erpCustomer.LastName;
+            view.Properties.FirstOrDefault(v => v.Name.Equals("email", StringComparison.OrdinalIgnoreCase)).Value =
+                erpCustomer.Email;
+            view.Properties.FirstOrDefault(v => v.Name.Equals("AccountStatus", StringComparison.OrdinalIgnoreCase)).Value =
+                erpCustomer.AccountStatus;
+            //view.Properties.FirstOrDefault(v => v.Name.Equals("Language", StringComparison.OrdinalIgnoreCase)).Value =context.CommerceContext.CurrentLanguage();
+            var viewCustomer = await _doActionPipeline.Run(view, context);
+
+            foreach (var erpCustomerAddress in erpCustomer.ErpCustomerAddressList)
+            {
+                await AddAddress(erpCustomerAddress, viewCustomer.EntityId, context);
+            }
+        }
+
+        private async Task EditCustomer(ErpCustomer erpCustomer, string customerId, CommercePipelineExecutionContext context)
+        {
+            var entityViewArg = new EntityViewArgument();
+            entityViewArg.EntityId = customerId;
+            entityViewArg.ViewName = "Details";
+            entityViewArg.ForAction = "EditCustomer";
+            var view = await _getEntityViewPipeline.Run(entityViewArg, context);
+            view.Properties.FirstOrDefault(v => v.Name.Equals("FirstName", StringComparison.OrdinalIgnoreCase)).Value =
+                erpCustomer.FirstName; ;
+            view.Properties.FirstOrDefault(v => v.Name.Equals("LastName", StringComparison.OrdinalIgnoreCase)).Value =
+                erpCustomer.LastName;
+            view.Properties.FirstOrDefault(v => v.Name.Equals("AccountStatus", StringComparison.OrdinalIgnoreCase)).Value =
+                erpCustomer.AccountStatus;
+            //view.Properties.FirstOrDefault(v => v.Name.Equals("Language", StringComparison.OrdinalIgnoreCase)).Value =context.CommerceContext.CurrentLanguage();
+            view = await _doActionPipeline.Run(view, context);
+        }
+
+        private async Task AddAddress(ErpCustomerAddress erpCustomerAddress, string customerId, CommercePipelineExecutionContext context)
+        {
+            var entityViewArg = new EntityViewArgument();
+            entityViewArg.EntityId = customerId;
+            entityViewArg.ViewName = "AddressDetails";
+            entityViewArg.ForAction = "SelectAddressCountry";
+            var view = await _getEntityViewPipeline.Run(entityViewArg, context);
+            //view.EntityId = customerId;
+            view.ItemId = $"{(object)CommerceEntity.IdPrefix<AddressComponent>()}{customerId}-{erpCustomerAddress.AddressName}";
+            //view = await _doActionPipeline.Run(view, context);
+            view.Properties.FirstOrDefault(p => p.Name.Equals("AddressName", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.AddressName;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("FirstName", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.FirstName;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("LastName", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.LastName;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Address1", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Address1;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Address2", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Address2;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("City", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.City;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("State", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.State;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("StateCode", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.StateCode;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Country", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Country;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("CountryCode", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.CountryCode;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("ZipPostalCode", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.ZipPostalCode;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("PhoneNumber", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.PhoneNumber;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Email", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Email;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("IsPrimary", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.IsPrimary ? "true" : "false";
+            //view.Properties.FirstOrDefault(v => v.Name.Equals("Language", StringComparison.OrdinalIgnoreCase)).Value =context.CommerceContext.CurrentLanguage();
+            var viewAddress = await _doActionPipeline.Run(view, context);
+        }
+
+        private async Task EditAddress(ErpCustomerAddress erpCustomerAddress, string customerId, CommercePipelineExecutionContext context)
+        {
+            var entityViewArg = new EntityViewArgument();
+
+            entityViewArg.EntityId = customerId;
+            entityViewArg.ViewName = "AddressDetails";
+            entityViewArg.ForAction = "AddCAddress";
+            entityViewArg.ItemId= $"{(object)CommerceEntity.IdPrefix<AddressComponent>()}{customerId}-{erpCustomerAddress.AddressName}";
+            var view = await _getEntityViewPipeline.Run(entityViewArg, context);
+            view.EntityId = customerId;
+            view.ItemId= $"{(object)CommerceEntity.IdPrefix<AddressComponent>()}{customerId}-{erpCustomerAddress.AddressName}";
+            view.Properties.FirstOrDefault(p => p.Name.Equals("AddressName", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.AddressName;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("FirstName", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.FirstName;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("LastName", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.LastName;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Address1", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Address1;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Address2", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Address2;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("City", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.City;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("State", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.State;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("StateCode", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.StateCode;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Country", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Country;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("CountryCode", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.CountryCode;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("ZipPostalCode", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.ZipPostalCode;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("PhoneNumber", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.PhoneNumber;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("Email", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.Email;
+            view.Properties.FirstOrDefault(p => p.Name.Equals("IsPrimary", StringComparison.OrdinalIgnoreCase)).Value = erpCustomerAddress.IsPrimary ? "true" : "false";
+            //view.Properties.FirstOrDefault(v => v.Name.Equals("Language", StringComparison.OrdinalIgnoreCase)).Value =context.CommerceContext.CurrentLanguage();
+            var viewAddress = await _doActionPipeline.Run(view, context);
+        }
+        private IList<ErpCustomer> GetCustomersFromERP(JobInfoArgument jobInfoArgument)
+        {
+            var connectionString = jobInfoArgument.JobConnection.GetPolicy<JobConnectionPolicy>().DbConnectionString;
+            Condition.Requires(connectionString).IsNotNullOrEmpty("GetCustomersFromERP: connectionString cannot be null or empty.");
+            Condition.Requires(jobInfoArgument.Job.SqlQuery).IsNotNullOrEmpty("GetCustomersFromERP: Job.SqlQuery cannot be null or empty.");
+            var customerList = new List<ErpCustomer>();
+            using (var sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                var query = jobInfoArgument.Job.SqlQuery;
+                //const string query = @"select
+                //                        c.AccountNumber as CustomerAccountNumber, 
+                //                        c.AccountStatus as CustomerAccountStatus,
+                //                        c.FirstName as CustomerFirstName,
+                //                        c.LastName as CustomerLastName,
+                //                        c.Email as CustomerEmail,
+                //                        a.AddressName as AddressName,
+                //                        a.FirstName as AddressFirstName,
+                //                        a.LastName as AddressLastName,
+                //                        a.Address1 as Address1,
+                //                        a.Address2 as Address2,
+                //                        a.City as City,
+                //                        a.State as State,
+                //                        a.StateCode as StateCode,
+                //                        a.Country as Country,
+                //                        a.CountryCode as CountryCode,
+                //                        a.ZipCode as ZipCode,
+                //                        a.Email as Email,
+                //                        a.PhoneNumber as PhoneNumber,
+                //                        a.IsPrimary as IsPrimary,
+                //                        a.Company as Company
+                //                        from Customer c
+                //                        inner join Address a on c.Id = a.CustomerId
+                //                        Order by AccountNumber";
+                using (var command = new SqlCommand(query, sqlConnection))
+                {
+                    command.CommandTimeout = 90;
+                    var reader=command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var erpCustomerAddress = new ErpCustomerAddress()
+                        {
+                            Address1 = reader.GetString(reader.GetOrdinal("Address1")),
+                            Address2 = reader.GetString(reader.GetOrdinal("Address2")),
+                            AddressName = reader.GetString(reader.GetOrdinal("AddressName")),
+                            FirstName = reader.GetString(reader.GetOrdinal("AddressFirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("AddressLastName")),
+                            City = reader.GetString(reader.GetOrdinal("City")),
+                            Company = reader.GetString(reader.GetOrdinal("Company")),
+                            Country = reader.GetString(reader.GetOrdinal("Country")),
+                            CountryCode = reader.GetString(reader.GetOrdinal("CountryCode")),
+                            IsPrimary = reader.GetBoolean(reader.GetOrdinal("IsPrimary")),
+                            PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
+                            State = reader.GetString(reader.GetOrdinal("State")),
+                            StateCode = reader.GetString(reader.GetOrdinal("StateCode")),
+                            ZipPostalCode = reader.GetString(reader.GetOrdinal("ZipCode")),
+                            Email = reader.GetString(reader.GetOrdinal("Email"))
+                        };
+                        var erpCustomerAddressList = new List<ErpCustomerAddress>
+                        {
+                            erpCustomerAddress
+                        };
+                        var erpCustomer = new ErpCustomer()
+                        {
+                            AccountNumber = reader.GetString(reader.GetOrdinal("CustomerAccountNumber")),
+                            AccountStatus = reader.GetString(reader.GetOrdinal("CustomerAccountStatus")),
+                            Email = reader.GetString(reader.GetOrdinal("CustomerEmail")),
+                            ErpCustomerAddressList = erpCustomerAddressList,
+                            FirstName = reader.GetString(reader.GetOrdinal("CustomerFirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("CustomerLastName")),
+                        };
+                        customerList.Add(erpCustomer);
+                    }
+                }
+            }
+                //var erpCustomerAddress = new ErpCustomerAddress()
+                //{
+                //    Address1 = "1234 xyz street",
+                //    Address2 = string.Empty,
+                //    AddressName = "my address",
+                //    City = "Dublin",
+                //    Company = "1",
+                //    Country = "USA",
+                //    CountryCode = "US",
+                //    IsPrimary = true,
+                //    PhoneNumber = "9999999999",
+                //    State = "Ohio",
+                //    StateCode = "OH",
+                //    ZipPostalCode = "43016",
+                //    Email = "himadric@yahoo.com"
+                //};
+            //var erpCustomerAddressList = new List<ErpCustomerAddress>();
+            //erpCustomerAddressList.Add(erpCustomerAddress);
+            //var erpCustomer = new ErpCustomer()
+            //{
+            //    AccountNumber = "0002",
+            //    AccountStatus = "ActiveAccount",
+            //    Email = "himadric@yxyz.com",
+            //    ErpCustomerAddressList = erpCustomerAddressList,
+            //    FirstName = "Himadri",
+            //    LastName = "Chakrabarti",
+            //};
+            return customerList;
+        }
+    }
+}
