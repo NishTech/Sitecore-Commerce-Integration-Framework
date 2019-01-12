@@ -1,5 +1,5 @@
 # Sitecore Commerce Integration Framework
-In most online ecommerce implementations, integration with backend systems like ERP, PIM etc. plays an important role. Most companies spend years building these systems and want to keep using them. A modern ecommerce platform like Sitecore Experience Commerce helps customers to enter in the much needed digital commerce space, but it needs a communication link to the backend system to complete  ecommerce transactions. This open source integration framework for Sitecore Commerce will give a jump start for your Sitecore Commerce project, that needs to integrate with backend system.
+In most online ecommerce implementations, integration with backend systems like ERP, PIM etc. plays an important role. Most companies spend years building these systems and want to keep using them. A modern ecommerce platform like Sitecore Experience Commerce helps customers to enter in the much needed digital commerce space, but it needs a communication link to the backend system to complete  ecommerce transactions. This open source integration framework for Sitecore Commerce will give a jump start for your Sitecore Commerce project that needs to integrate with backend system.
 
 ## How It Works
 There are two plugins in this solution
